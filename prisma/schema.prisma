@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Product model
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  category    String
+  image       String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  reviews     Review[]
+  orders      Order[]
+
+  @@index([category])
+}
+
+// Review model
+model Review {
+  id        String   @id @default(cuid())
+  content   String
+  rating    Int      // 1-5
+  image     String?
+  createdAt DateTime @default(now())
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+// Order model
+model Order {
+  id              String   @id @default(cuid())
+  customerName    String
+  customerEmail   String?  // Optional email field
+  customerPhone   String
+  orderDate       DateTime @default(now())
+  totalPrice      Float
+  orderType       String   // "whatsapp", "instagram", "facebook"
+  orderStatus     String   @default("pending") // "pending", "completed", "cancelled"
+  
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([orderStatus])
+}
