@@ -1,13 +1,24 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, ShoppingCart, Search, User, Heart } from "lucide-react"
+import { Menu, ShoppingCart, Search, User, Heart, LogOut } from "lucide-react"
 import { useState } from "react"
 import { useCart } from "@/lib/cart-context"
+import { useAuth } from "@/lib/auth-context"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { getCartCount } = useCart()
+  const { user, logout, isAuthenticated } = useAuth()
   const cartCount = getCartCount()
 
   return (
@@ -40,9 +51,46 @@ export default function Navbar() {
             <button className="p-2 hover:bg-gray-50 rounded-full transition hidden md:block">
               <Search className="w-5 h-5 text-gray-700" />
             </button>
-            <button className="p-2 hover:bg-gray-50 rounded-full transition hidden md:block">
-              <User className="w-5 h-5 text-gray-700" />
-            </button>
+            
+            {/* User Menu */}
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 hover:bg-gray-50 rounded-full transition hidden md:block">
+                    <User className="w-5 h-5 text-gray-700" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">{user?.name}</p>
+                      <p className="text-xs text-gray-500">{user?.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {user?.role === "admin" && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link href="/track-orders">My Orders</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="text-red-600">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login" className="hidden md:block">
+                <Button variant="ghost" size="sm" className="text-gray-700">
+                  Login
+                </Button>
+              </Link>
+            )}
+
             <Link href="/track-orders" className="p-2 hover:bg-gray-50 rounded-full transition hidden md:block">
               <Heart className="w-5 h-5 text-gray-700" />
             </Link>
@@ -77,9 +125,26 @@ export default function Navbar() {
             <Link href="/track-orders" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
               TRACK ORDERS
             </Link>
-            <Link href="/admin" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
-              ADMIN
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <div className="px-4 py-2 text-xs text-gray-500">{user?.name}</div>
+                {user?.role === "admin" && (
+                  <Link href="/admin" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
+                    ADMIN
+                  </Link>
+                )}
+                <button
+                  onClick={logout}
+                  className="w-full text-left px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg"
+                >
+                  LOGOUT
+                </button>
+              </>
+            ) : (
+              <Link href="/login" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
+                LOGIN
+              </Link>
+            )}
           </div>
         </div>
       )}

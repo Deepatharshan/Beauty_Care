@@ -2,10 +2,12 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, Package, MessageSquare, ShoppingCart, LogOut } from "lucide-react"
+import { BarChart3, Package, MessageSquare, ShoppingCart, Users, LogOut } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const { logout } = useAuth()
 
   const isActive = (path: string) => pathname === path
 
@@ -14,10 +16,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-gray-700">
         <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#d4549b] to-[#f5a9d0] rounded-lg flex items-center justify-center">
-            <span className="font-bold text-lg">B</span>
-          </div>
-          <span className="font-bold text-xl">BeautyCore</span>
+          <span className="text-2xl font-light tracking-[0.2em] text-white">GLOWING</span>
         </Link>
       </div>
 
@@ -26,7 +25,7 @@ export default function Sidebar() {
         <Link
           href="/admin"
           className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-            isActive("/admin") ? "bg-[#d4549b] text-white" : "text-gray-300 hover:bg-gray-800"
+            isActive("/admin") ? "bg-gray-800 text-white" : "text-gray-300 hover:bg-gray-800"
           }`}
         >
           <BarChart3 size={20} />
@@ -36,7 +35,7 @@ export default function Sidebar() {
         <Link
           href="/admin/products"
           className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-            isActive("/admin/products") ? "bg-[#d4549b] text-white" : "text-gray-300 hover:bg-gray-800"
+            isActive("/admin/products") ? "bg-gray-800 text-white" : "text-gray-300 hover:bg-gray-800"
           }`}
         >
           <Package size={20} />
@@ -46,7 +45,7 @@ export default function Sidebar() {
         <Link
           href="/admin/orders"
           className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-            isActive("/admin/orders") ? "bg-[#d4549b] text-white" : "text-gray-300 hover:bg-gray-800"
+            isActive("/admin/orders") ? "bg-gray-800 text-white" : "text-gray-300 hover:bg-gray-800"
           }`}
         >
           <ShoppingCart size={20} />
@@ -56,11 +55,21 @@ export default function Sidebar() {
         <Link
           href="/admin/reviews"
           className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-            isActive("/admin/reviews") ? "bg-[#d4549b] text-white" : "text-gray-300 hover:bg-gray-800"
+            isActive("/admin/reviews") ? "bg-gray-800 text-white" : "text-gray-300 hover:bg-gray-800"
           }`}
         >
           <MessageSquare size={20} />
           Reviews
+        </Link>
+
+        <Link
+          href="/admin/users"
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+            isActive("/admin/users") ? "bg-gray-800 text-white" : "text-gray-300 hover:bg-gray-800"
+          }`}
+        >
+          <Users size={20} />
+          Users
         </Link>
       </nav>
 
@@ -68,11 +77,17 @@ export default function Sidebar() {
       <div className="p-6 border-t border-gray-700">
         <Link
           href="/"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition"
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition mb-2"
         >
-          <LogOut size={20} />
           Back to Store
         </Link>
+        <button
+          onClick={logout}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition w-full"
+        >
+          <LogOut size={20} />
+          Logout
+        </button>
       </div>
     </aside>
   )

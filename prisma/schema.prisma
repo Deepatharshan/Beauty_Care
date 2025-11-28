@@ -10,6 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User model for authentication
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String
+  password  String
+  role      String   @default("customer") // "customer" or "admin"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  orders    Order[]
+
+  @@index([email])
+}
+
 // Product model
 model Product {
   id          String    @id @default(cuid())
@@ -51,10 +67,15 @@ model Order {
   totalPrice      Float
   orderType       String   // "whatsapp", "instagram", "facebook"
   orderStatus     String   @default("pending") // "pending", "completed", "cancelled"
+  quantity        Int      @default(1)
   
   productId       String
   product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([productId])
+  @@index([userId])
   @@index([orderStatus])
 }
