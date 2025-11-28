@@ -102,14 +102,14 @@ export default function AdminOrders() {
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#1a1a1a]">Orders</h1>
-            <p className="text-gray-600 mt-2">View and manage customer orders</p>
+            <h1 className="text-3xl font-light text-gray-900 tracking-wide">Orders</h1>
+            <p className="text-gray-500 mt-2 text-sm">View and manage customer orders</p>
           </div>
 
-          <Card>
+          <Card className="bg-white">
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4549b]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
               </div>
             ) : orders.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
@@ -132,16 +132,16 @@ export default function AdminOrders() {
                     <TableRow key={order.id}>
                       <TableCell>
                         <div>
-                          <p className="font-semibold">{order.customerName}</p>
-                          <p className="text-sm text-gray-600">{order.customerPhone}</p>
+                          <p className="font-medium text-gray-900">{order.customerName}</p>
+                          <p className="text-sm text-gray-500">{order.customerPhone}</p>
                           {order.customerEmail && (
-                            <p className="text-sm text-gray-500">{order.customerEmail}</p>
+                            <p className="text-sm text-gray-400">{order.customerEmail}</p>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell>{order.product?.name || "N/A"}</TableCell>
+                      <TableCell className="text-gray-700">{order.product?.name || "N/A"}</TableCell>
                       <TableCell>
-                        <span className="font-semibold text-[#d4549b]">Rs. {order.totalPrice.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900">Rs. {order.totalPrice.toLocaleString()}</span>
                       </TableCell>
                       <TableCell>
                         <span

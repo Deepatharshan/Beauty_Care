@@ -60,7 +60,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       <main>
         <Navbar />
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4549b]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
         </div>
       </main>
     )
@@ -88,10 +88,10 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       <Navbar />
 
       {/* Breadcrumb */}
-      <div className="bg-gray-50 border-b">
+      <div className="bg-white border-b border-gray-100">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-[#d4549b] hover:text-[#c1408a]">
-            <ArrowLeft size={18} />
+          <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition text-sm">
+            <ArrowLeft size={16} />
             Back to Products
           </Link>
         </div>
@@ -115,51 +115,51 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           {/* Product Info */}
           <div>
             <div className="mb-4">
-              <span className="inline-block px-3 py-1 bg-[#f5a9d0] text-[#1a1a1a] text-sm font-semibold rounded-full">
+              <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded uppercase tracking-wider">
                 {product.category}
               </span>
             </div>
 
-            <h1 className="text-4xl font-bold text-[#1a1a1a] mb-4">{product.name}</h1>
+            <h1 className="text-3xl font-light text-gray-900 mb-4 tracking-wide">{product.name}</h1>
 
             {/* Rating Summary */}
-            <div className="flex items-center gap-4 mb-6 pb-6 border-b">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+              <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    size={20}
+                    size={18}
                     className={
-                      i < Math.round(averageRating as any) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                      i < Math.round(averageRating as any) ? "fill-gray-900 text-gray-900" : "text-gray-200"
                     }
                   />
                 ))}
               </div>
               <RatingBadge rating={Number.parseFloat(averageRating as string)} />
-              <span className="text-gray-600">({reviews.length} reviews)</span>
+              <span className="text-gray-500 text-sm">({reviews.length} reviews)</span>
             </div>
 
-            <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
+            <p className="text-gray-600 mb-6 leading-relaxed text-sm">{product.description}</p>
 
             {/* Price */}
             <div className="mb-6">
-              <span className="text-5xl font-bold text-[#d4549b]">Rs. {product.price}</span>
+              <span className="text-4xl font-light text-gray-900">Rs. {product.price}</span>
             </div>
 
             {/* Quantity Selector */}
             <div className="mb-6">
-              <label className="text-sm font-semibold mb-2 block">Quantity</label>
+              <label className="text-xs font-medium mb-2 block text-gray-600 uppercase tracking-wider">Quantity</label>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2 border rounded-lg hover:bg-gray-100 font-semibold"
+                  className="w-10 h-10 border border-gray-300 rounded hover:bg-gray-50 font-medium text-gray-700 transition"
                 >
                   -
                 </button>
-                <span className="text-xl font-semibold w-12 text-center">{quantity}</span>
+                <span className="text-lg font-light w-12 text-center text-gray-900">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2 border rounded-lg hover:bg-gray-100 font-semibold"
+                  className="w-10 h-10 border border-gray-300 rounded hover:bg-gray-50 font-medium text-gray-700 transition"
                 >
                   +
                 </button>
@@ -181,9 +181,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                     quantity
                   )
                 }}
-                className="w-full bg-[#d4549b] hover:bg-[#c1408a] text-white"
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white"
               >
-                <Plus className="mr-2" size={20} />
+                <Plus className="mr-2" size={18} />
                 Add to Cart
               </Button>
             </div>
@@ -197,24 +197,24 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Review Stats */}
           <div className="lg:col-span-1">
-            <Card className="p-6">
-              <h3 className="text-xl font-bold mb-6 text-[#1a1a1a]">Review Summary</h3>
+            <Card className="p-6 bg-white">
+              <h3 className="text-lg font-medium mb-6 text-gray-900">Review Summary</h3>
 
               <div className="space-y-4">
-                <div className="text-center pb-6 border-b">
-                  <div className="text-4xl font-bold text-[#d4549b]">{averageRating}</div>
-                  <div className="flex justify-center mt-2">
+                <div className="text-center pb-6 border-b border-gray-100">
+                  <div className="text-4xl font-light text-gray-900">{averageRating}</div>
+                  <div className="flex justify-center mt-2 gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
                         size={16}
                         className={
-                          i < Math.round(averageRating as any) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                          i < Math.round(averageRating as any) ? "fill-gray-900 text-gray-900" : "text-gray-200"
                         }
                       />
                     ))}
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">Based on {reviews.length} reviews</p>
+                  <p className="text-sm text-gray-500 mt-2">Based on {reviews.length} reviews</p>
                 </div>
 
                 {/* Rating Distribution */}
@@ -223,12 +223,12 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0
                   return (
                     <div key={rating} className="flex items-center gap-2">
-                      <span className="text-sm font-semibold w-8">{rating}</span>
-                      <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-yellow-400" style={{ width: `${percentage}%` }}></div>
+                      <span className="text-sm font-medium w-8 text-gray-700">{rating}</span>
+                      <Star size={14} className="fill-gray-900 text-gray-900" />
+                      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-gray-900" style={{ width: `${percentage}%` }}></div>
                       </div>
-                      <span className="text-sm text-gray-600 w-8 text-right">{count}</span>
+                      <span className="text-sm text-gray-500 w-8 text-right">{count}</span>
                     </div>
                   )
                 })}
@@ -236,7 +236,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
               <Button
                 onClick={() => setShowReviewForm(true)}
-                className="w-full mt-6 bg-[#d4549b] hover:bg-[#c1408a] text-white"
+                className="w-full mt-6 bg-gray-900 hover:bg-gray-800 text-white"
               >
                 <MessageCircle size={18} className="mr-2" />
                 Write a Review

@@ -110,14 +110,14 @@ export default function TrackOrdersPage() {
     <main>
       <Navbar />
 
-      <section className="bg-gradient-to-b from-[#f5a9d0] to-[#fafafa] py-16">
+      <section className="bg-gray-50 border-b border-gray-100 py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-[#1a1a1a] mb-4">Track Your Orders</h1>
-            <p className="text-lg text-gray-600">Enter your phone number to view your order status</p>
+            <h1 className="text-4xl font-light text-gray-900 mb-4 tracking-wide">Track Your Orders</h1>
+            <p className="text-gray-600 text-sm">Enter your phone number to view your order status</p>
           </div>
 
-          <Card className="max-w-2xl mx-auto p-6">
+          <Card className="max-w-2xl mx-auto p-6 bg-white">
             <div className="flex gap-3">
               <div className="flex-1">
                 <Input
@@ -132,7 +132,7 @@ export default function TrackOrdersPage() {
               <Button
                 onClick={handleSearch}
                 disabled={loading}
-                className="bg-[#d4549b] hover:bg-[#c1408a] text-white h-12 px-8"
+                className="bg-gray-900 hover:bg-gray-800 text-white h-12 px-8"
               >
                 {loading ? (
                   <>
@@ -154,33 +154,33 @@ export default function TrackOrdersPage() {
       <section className="container mx-auto px-4 py-12">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4549b]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
           </div>
         ) : searched && orders.length === 0 ? (
-          <Card className="p-12 text-center">
+          <Card className="p-12 text-center bg-white">
             <Package size={64} className="mx-auto text-gray-300 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">No Orders Found</h2>
-            <p className="text-gray-600">We couldn't find any orders for this phone number.</p>
+            <h2 className="text-2xl font-light text-gray-900 mb-2">No Orders Found</h2>
+            <p className="text-gray-500 text-sm">We couldn't find any orders for this phone number.</p>
           </Card>
         ) : orders.length > 0 ? (
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6">Your Orders ({orders.length})</h2>
+            <h2 className="text-2xl font-light mb-6 text-gray-900">Your Orders ({orders.length})</h2>
             <div className="space-y-4">
               {orders.map((order) => (
-                <Card key={order.id} className="p-6">
+                <Card key={order.id} className="p-6 bg-white">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">{getStatusIcon(order.orderStatus)}</div>
 
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <h3 className="font-bold text-lg text-gray-900">{order.product?.name || "Product"}</h3>
-                          <p className="text-sm text-gray-600">
+                          <h3 className="font-medium text-lg text-gray-900">{order.product?.name || "Product"}</h3>
+                          <p className="text-xs text-gray-500 mt-1">
                             Order ID: {order.id.slice(0, 8)}...
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xl font-bold text-[#d4549b]">Rs. {order.totalPrice}</p>
+                          <p className="text-xl font-light text-gray-900">Rs. {order.totalPrice}</p>
                         </div>
                       </div>
 
@@ -203,18 +203,18 @@ export default function TrackOrdersPage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
                         <div>
-                          <span className="font-semibold">Customer:</span> {order.customerName}
+                          <span className="font-medium text-gray-900">Customer:</span> {order.customerName}
                         </div>
                         <div>
-                          <span className="font-semibold">Phone:</span> {order.customerPhone}
+                          <span className="font-medium text-gray-900">Phone:</span> {order.customerPhone}
                         </div>
                         {order.customerEmail && (
                           <div className="md:col-span-2">
-                            <span className="font-semibold">Email:</span> {order.customerEmail}
+                            <span className="font-medium text-gray-900">Email:</span> {order.customerEmail}
                           </div>
                         )}
                         <div className="md:col-span-2">
-                          <span className="font-semibold">Order Date:</span>{" "}
+                          <span className="font-medium text-gray-900">Order Date:</span>{" "}
                           {new Date(order.orderDate).toLocaleString("en-US", {
                             year: "numeric",
                             month: "long",
@@ -263,10 +263,10 @@ export default function TrackOrdersPage() {
             </div>
           </div>
         ) : (
-          <Card className="p-12 text-center">
+          <Card className="p-12 text-center bg-white">
             <Search size={64} className="mx-auto text-gray-300 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Track Your Orders</h2>
-            <p className="text-gray-600">Enter your phone number above to view your order history.</p>
+            <h2 className="text-2xl font-light text-gray-900 mb-2">Track Your Orders</h2>
+            <p className="text-gray-500 text-sm">Enter your phone number above to view your order history.</p>
           </Card>
         )}
       </section>

@@ -191,12 +191,12 @@ export default function CartPage() {
       <main>
         <Navbar />
         <div className="container mx-auto px-4 py-20">
-          <Card className="p-12 text-center">
+          <Card className="p-12 text-center bg-white">
             <ShoppingBag size={64} className="mx-auto text-gray-300 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Add some products to get started!</p>
+            <h2 className="text-2xl font-light text-gray-900 mb-2">Your cart is empty</h2>
+            <p className="text-gray-500 mb-6 text-sm">Add some products to get started!</p>
             <Link href="/">
-              <Button className="bg-[#d4549b] hover:bg-[#c1408a] text-white">
+              <Button className="bg-gray-900 hover:bg-gray-800 text-white">
                 Continue Shopping
               </Button>
             </Link>
@@ -210,45 +210,45 @@ export default function CartPage() {
     <main>
       <Navbar />
 
-      <div className="bg-gray-50 border-b">
+      <div className="bg-white border-b border-gray-100">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-[#d4549b] hover:text-[#c1408a]">
-            <ArrowLeft size={18} />
+          <Link href="/" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition text-sm">
+            <ArrowLeft size={16} />
             Continue Shopping
           </Link>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-light text-gray-900 mb-8">Shopping Cart</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {cart.map((item) => (
-              <Card key={item.id} className="p-4">
+              <Card key={item.id} className="p-4 bg-white">
                 <div className="flex gap-4">
-                  <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="relative w-24 h-24 bg-gray-50 rounded overflow-hidden flex-shrink-0">
                     <Image src={item.image} alt={item.name} fill className="object-cover" />
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-2">{item.name}</h3>
-                    <p className="text-lg font-bold text-[#d4549b] mb-3">Rs. {item.price}</p>
+                    <h3 className="font-medium text-gray-900 mb-2">{item.name}</h3>
+                    <p className="text-lg font-light text-gray-900 mb-3">Rs. {item.price}</p>
 
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="px-3 py-1 border rounded hover:bg-gray-100"
+                        className="w-8 h-8 border border-gray-300 rounded hover:bg-gray-50 flex items-center justify-center transition"
                       >
-                        <Minus size={16} />
+                        <Minus size={14} />
                       </button>
-                      <span className="font-semibold w-8 text-center">{item.quantity}</span>
+                      <span className="font-medium w-8 text-center text-sm">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="px-3 py-1 border rounded hover:bg-gray-100"
+                        className="w-8 h-8 border border-gray-300 rounded hover:bg-gray-50 flex items-center justify-center transition"
                       >
-                        <Plus size={16} />
+                        <Plus size={14} />
                       </button>
                     </div>
                   </div>
@@ -256,11 +256,11 @@ export default function CartPage() {
                   <div className="flex flex-col items-end justify-between">
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-gray-400 hover:text-gray-600 transition"
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={18} />
                     </button>
-                    <p className="font-bold text-gray-900">Rs. {item.price * item.quantity}</p>
+                    <p className="font-medium text-gray-900">Rs. {item.price * item.quantity}</p>
                   </div>
                 </div>
               </Card>
@@ -269,27 +269,27 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card className="p-6 sticky top-24">
-              <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <Card className="p-6 sticky top-24 bg-white">
+              <h2 className="text-lg font-medium mb-4 text-gray-900">Order Summary</h2>
 
               <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 text-sm">
                   <span>Subtotal</span>
                   <span>Rs. {getCartTotal()}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 text-sm">
                   <span>Items</span>
                   <span>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
                 </div>
-                <div className="border-t pt-3 flex justify-between text-xl font-bold">
+                <div className="border-t border-gray-100 pt-3 flex justify-between text-lg font-medium">
                   <span>Total</span>
-                  <span className="text-[#d4549b]">Rs. {getCartTotal()}</span>
+                  <span className="text-gray-900">Rs. {getCartTotal()}</span>
                 </div>
               </div>
 
               <Button
                 onClick={() => setShowOrderDialog(true)}
-                className="w-full bg-[#d4549b] hover:bg-[#c1408a] text-white mb-3"
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white mb-3"
                 size="lg"
               >
                 Proceed to Order
@@ -302,7 +302,7 @@ export default function CartPage() {
                   }
                 }}
                 variant="outline"
-                className="w-full"
+                className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 Clear Cart
               </Button>
@@ -349,14 +349,14 @@ export default function CartPage() {
               />
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg border">
-              <div className="flex justify-between mb-2">
-                <span>Total Items:</span>
-                <span className="font-semibold">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+            <div className="bg-gray-50 p-4 rounded border border-gray-100">
+              <div className="flex justify-between mb-2 text-sm">
+                <span className="text-gray-600">Total Items:</span>
+                <span className="font-medium text-gray-900">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
               </div>
-              <div className="border-t pt-2 flex justify-between text-lg">
-                <span className="font-bold">Total Amount:</span>
-                <span className="font-bold text-[#d4549b]">Rs. {getCartTotal()}</span>
+              <div className="border-t border-gray-200 pt-2 flex justify-between">
+                <span className="font-medium text-gray-900">Total Amount:</span>
+                <span className="font-medium text-gray-900">Rs. {getCartTotal()}</span>
               </div>
             </div>
 
@@ -364,7 +364,7 @@ export default function CartPage() {
               <Button
                 onClick={handleOrderViaWhatsApp}
                 disabled={isSubmitting}
-                className="w-full bg-green-500 hover:bg-green-600 text-white"
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
               >
                 Order via WhatsApp
               </Button>
@@ -372,7 +372,7 @@ export default function CartPage() {
               <Button
                 onClick={handleOrderViaInstagram}
                 disabled={isSubmitting}
-                className="w-full bg-pink-500 hover:bg-pink-600 text-white"
+                className="w-full bg-pink-600 hover:bg-pink-700 text-white"
               >
                 Order via Instagram
               </Button>

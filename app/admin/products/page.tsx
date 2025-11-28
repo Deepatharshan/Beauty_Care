@@ -78,17 +78,17 @@ export default function AdminProducts() {
         <div className="p-8">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-[#1a1a1a]">Products</h1>
-              <p className="text-gray-600 mt-2">Manage your beauty products</p>
+              <h1 className="text-3xl font-light text-gray-900 tracking-wide">Products</h1>
+              <p className="text-gray-500 mt-2 text-sm">Manage your beauty products</p>
             </div>
             <Button
               onClick={() => {
                 setEditingProduct(null)
                 setShowForm(true)
               }}
-              className="bg-[#d4549b] hover:bg-[#c1408a] text-white"
+              className="bg-gray-900 hover:bg-gray-800 text-white"
             >
-              <Plus size={20} className="mr-2" />
+              <Plus size={18} className="mr-2" />
               Add Product
             </Button>
           </div>
@@ -107,10 +107,10 @@ export default function AdminProducts() {
           </div>
 
           {/* Products Table */}
-          <Card>
+          <Card className="bg-white">
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4549b]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
@@ -142,13 +142,13 @@ export default function AdminProducts() {
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="font-semibold text-gray-900">{product.name}</p>
-                          <p className="text-sm text-gray-600 line-clamp-1">{product.description}</p>
+                          <p className="font-medium text-gray-900">{product.name}</p>
+                          <p className="text-sm text-gray-500 line-clamp-1">{product.description}</p>
                         </div>
                       </TableCell>
-                      <TableCell>{product.category}</TableCell>
+                      <TableCell className="text-gray-700">{product.category}</TableCell>
                       <TableCell>
-                        <span className="font-semibold text-[#d4549b]">Rs. {product.price}</span>
+                        <span className="font-medium text-gray-900">Rs. {product.price}</span>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">

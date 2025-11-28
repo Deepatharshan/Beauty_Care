@@ -53,8 +53,8 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4549b]"></div>
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
       </div>
     )
   }
@@ -66,51 +66,51 @@ export default function AdminDashboard() {
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#1a1a1a]">Dashboard</h1>
-            <p className="text-gray-600 mt-2">Welcome to your beauty store admin panel</p>
+            <h1 className="text-3xl font-light text-gray-900 tracking-wide">Dashboard</h1>
+            <p className="text-gray-500 mt-2 text-sm">Welcome to your beauty store admin panel</p>
           </div>
 
           {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-semibold">Total Orders</p>
-                  <p className="text-3xl font-bold text-[#1a1a1a] mt-2">{stats?.totalOrders || 0}</p>
+                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wider">Total Orders</p>
+                  <p className="text-3xl font-light text-gray-900 mt-2">{stats?.totalOrders || 0}</p>
                 </div>
-                <ShoppingCart size={32} className="text-[#d4549b]" />
+                <ShoppingCart size={32} className="text-gray-400" />
               </div>
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-semibold">Total Revenue</p>
-                  <p className="text-3xl font-bold text-[#1a1a1a] mt-2">
+                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wider">Total Revenue</p>
+                  <p className="text-3xl font-light text-gray-900 mt-2">
                     Rs. {(stats?.totalRevenue || 0).toLocaleString()}
                   </p>
                 </div>
-                <DollarSign size={32} className="text-green-500" />
+                <DollarSign size={32} className="text-gray-400" />
               </div>
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-semibold">Products</p>
-                  <p className="text-3xl font-bold text-[#1a1a1a] mt-2">{stats?.totalProducts || 0}</p>
+                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wider">Products</p>
+                  <p className="text-3xl font-light text-gray-900 mt-2">{stats?.totalProducts || 0}</p>
                 </div>
-                <Package size={32} className="text-blue-500" />
+                <Package size={32} className="text-gray-400" />
               </div>
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-6 bg-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-semibold">Reviews</p>
-                  <p className="text-3xl font-bold text-[#1a1a1a] mt-2">{stats?.totalReviews || 0}</p>
+                  <p className="text-gray-500 text-xs font-medium uppercase tracking-wider">Reviews</p>
+                  <p className="text-3xl font-light text-gray-900 mt-2">{stats?.totalReviews || 0}</p>
                 </div>
-                <TrendingUp size={32} className="text-orange-500" />
+                <TrendingUp size={32} className="text-gray-400" />
               </div>
             </Card>
           </div>
@@ -124,16 +124,16 @@ export default function AdminDashboard() {
             </TabsList>
 
             <TabsContent value="revenue">
-              <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4 text-[#1a1a1a]">Daily Revenue</h3>
+              <Card className="p-6 bg-white">
+                <h3 className="text-lg font-medium mb-4 text-gray-900">Daily Revenue</h3>
                 <ResponsiveContainer width="100%" height={400}>
                   <LineChart data={stats?.dailyRevenue || []}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="date" stroke="#6b7280" />
+                    <YAxis stroke="#6b7280" />
                     <Tooltip formatter={(value) => `Rs. ${value}`} />
                     <Legend />
-                    <Line type="monotone" dataKey="revenue" stroke="#d4549b" name="Revenue" strokeWidth={2} />
+                    <Line type="monotone" dataKey="revenue" stroke="#111827" name="Revenue" strokeWidth={2} />
                   </LineChart>
                 </ResponsiveContainer>
               </Card>
@@ -141,8 +141,8 @@ export default function AdminDashboard() {
 
             <TabsContent value="channels">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="p-6">
-                  <h3 className="text-lg font-bold mb-4 text-[#1a1a1a]">Orders by Channel</h3>
+                <Card className="p-6 bg-white">
+                  <h3 className="text-lg font-medium mb-4 text-gray-900">Orders by Channel</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
@@ -155,25 +155,25 @@ export default function AdminDashboard() {
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        <Cell fill="#d4549b" />
-                        <Cell fill="#f5a9d0" />
-                        <Cell fill="#c1408a" />
+                        <Cell fill="#111827" />
+                        <Cell fill="#6b7280" />
+                        <Cell fill="#9ca3af" />
                       </Pie>
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
                 </Card>
 
-                <Card className="p-6">
-                  <h3 className="text-lg font-bold mb-4 text-[#1a1a1a]">Channel Breakdown</h3>
+                <Card className="p-6 bg-white">
+                  <h3 className="text-lg font-medium mb-4 text-gray-900">Channel Breakdown</h3>
                   <div className="space-y-4">
                     {stats?.ordersByChannel?.map((channel) => (
                       <div key={channel.name} className="flex items-center justify-between">
-                        <span className="text-gray-700">{channel.name}</span>
+                        <span className="text-gray-700 text-sm">{channel.name}</span>
                         <div className="flex items-center gap-2">
-                          <div className="w-16 bg-gray-200 rounded-full h-2 overflow-hidden">
+                          <div className="w-16 bg-gray-100 rounded-full h-2 overflow-hidden">
                             <div
-                              className="bg-[#d4549b] h-full"
+                              className="bg-gray-900 h-full"
                               style={{
                                 width: `${
                                   (channel.value /
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
                               }}
                             ></div>
                           </div>
-                          <span className="font-semibold w-12 text-right">{channel.value}</span>
+                          <span className="font-medium w-12 text-right text-sm">{channel.value}</span>
                         </div>
                       </div>
                     ))}
@@ -193,16 +193,16 @@ export default function AdminDashboard() {
             </TabsContent>
 
             <TabsContent value="status">
-              <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4 text-[#1a1a1a]">Orders by Status</h3>
+              <Card className="p-6 bg-white">
+                <h3 className="text-lg font-medium mb-4 text-gray-900">Orders by Status</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={stats?.ordersByStatus || []}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="name" stroke="#6b7280" />
+                    <YAxis stroke="#6b7280" />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="value" fill="#d4549b" name="Orders" />
+                    <Bar dataKey="value" fill="#111827" name="Orders" />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>

@@ -75,14 +75,14 @@ export default function AdminReviews() {
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#1a1a1a]">Reviews</h1>
-            <p className="text-gray-600 mt-2">Manage customer reviews and ratings</p>
+            <h1 className="text-3xl font-light text-gray-900 tracking-wide">Reviews</h1>
+            <p className="text-gray-500 mt-2 text-sm">Manage customer reviews and ratings</p>
           </div>
 
-          <Card>
+          <Card className="bg-white">
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4549b]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
               </div>
             ) : reviews.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
@@ -104,7 +104,7 @@ export default function AdminReviews() {
                   {reviews.map((review) => (
                     <TableRow key={review.id}>
                       <TableCell>
-                        <p className="font-semibold text-gray-900">{review.product?.name || "Unknown Product"}</p>
+                        <p className="font-medium text-gray-900">{review.product?.name || "Unknown Product"}</p>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -113,11 +113,11 @@ export default function AdminReviews() {
                               <Star
                                 key={i}
                                 size={14}
-                                className={i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                                className={i < review.rating ? "fill-gray-900 text-gray-900" : "text-gray-200"}
                               />
                             ))}
                           </div>
-                          <span className={`font-bold ${getRatingColor(review.rating)}`}>{review.rating}/5</span>
+                          <span className="font-medium text-gray-900">{review.rating}/5</span>
                         </div>
                       </TableCell>
                       <TableCell>
