@@ -75,7 +75,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(data.error || "Login failed")
       }
 
-      Cookies.set("auth_token", data.token, { expires: 7 })
+      // Set cookie with proper attributes for middleware to read
+      Cookies.set("auth_token", data.token, { 
+        expires: 7,
+        path: "/",
+        sameSite: "strict"
+      })
       setUser(data.user)
       toast.success("Login successful!")
       
@@ -86,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           router.push("/")
         }
-      }, 300)
+      }, 500)
     } catch (error: any) {
       toast.error(error.message || "Login failed")
       throw error

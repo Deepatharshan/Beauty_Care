@@ -6,42 +6,43 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value
   const { pathname } = request.nextUrl
 
-  // Public routes that don't require authentication
-  const publicRoutes = ["/login", "/register", "/", "/product"]
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
-
-  // Admin routes
-  const isAdminRoute = pathname.startsWith("/admin")
-
-  // API routes that need protection
-  const isProtectedApiRoute = pathname.startsWith("/api/orders") && request.method === "POST"
-
-  // If accessing admin routes
-  if (isAdminRoute) {
+  // Admin routes - just check if token exists and is valid
+  if (pathname.startsWith("/admin")) {
     if (!token) {
       return NextResponse.redirect(new URL("/login?redirect=/admin", request.url))
     }
 
     const payload = verifyToken(token)
-    if (!payload || payload.role !== "admin") {
+    if (!payload) {
+      return NextResponse.redirect(new URL("/login?error=unauthorized", request.url))
+    }
+    
+    // Check if user is admin
+    if (payload.role !== "admin") {
       return NextResponse.redirect(new URL("/login?error=unauthorized", request.url))
     }
   }
 
-  // If accessing cart or trying to place orders
-  if (pathname === "/cart" || isProtectedApiRoute) {
+  // Cart page - check authentication
+  if (pathname === "/cart") {
     if (!token) {
-      if (pathname === "/cart") {
-        return NextResponse.redirect(new URL("/login?redirect=/cart", request.url))
-      }
+      return NextResponse.redirect(new URL("/login?redirect=/cart", request.url))
+    }
+
+    const payload = verifyToken(token)
+    if (!payload) {
+      return NextResponse.redirect(new URL("/login", request.url))
+    }
+  }
+
+  // Protected API routes
+  if (pathname.startsWith("/api/orders") && request.method === "POST") {
+    if (!token) {
       return NextResponse.json({ error: "Authentication required" }, { status: 401 })
     }
 
     const payload = verifyToken(token)
     if (!payload) {
-      if (pathname === "/cart") {
-        return NextResponse.redirect(new URL("/login", request.url))
-      }
       return NextResponse.json({ error: "Invalid token" }, { status: 401 })
     }
   }
