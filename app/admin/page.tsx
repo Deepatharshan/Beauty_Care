@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 import {
   BarChart,
   Bar,
@@ -32,12 +34,21 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
+  const { user, loading: authLoading, isAdmin } = useAuth()
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (authLoading) return
+
+    if (!user || !isAdmin) {
+      router.push("/login")
+      return
+    }
+
     fetchDashboardStats()
-  }, [])
+  }, [authLoading, user, isAdmin, router])
 
   const fetchDashboardStats = async () => {
     try {
@@ -51,12 +62,16 @@ export default function AdminDashboard() {
     }
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
       </div>
     )
+  }
+
+  if (!isAdmin || !user) {
+    return null
   }
 
   return (

@@ -6,23 +6,6 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value
   const { pathname } = request.nextUrl
 
-  // Admin routes - just check if token exists and is valid
-  if (pathname.startsWith("/admin")) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login?redirect=/admin", request.url))
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.redirect(new URL("/login?error=unauthorized", request.url))
-    }
-    
-    // Check if user is admin
-    if (payload.role !== "admin") {
-      return NextResponse.redirect(new URL("/login?error=unauthorized", request.url))
-    }
-  }
-
   // Cart page - check authentication
   if (pathname === "/cart") {
     if (!token) {
@@ -52,7 +35,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin/:path*",
     "/cart",
     "/api/orders/:path*",
   ],
