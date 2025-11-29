@@ -38,16 +38,22 @@ export default function AdminDashboard() {
   const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || authLoading) return
+
+    if (!user || !isAdmin) {
       router.push("/login")
       return
     }
-    if (!authLoading && user && isAdmin) {
-      fetchDashboardStats()
-    }
-  }, [authLoading, user, isAdmin, router])
+
+    fetchDashboardStats()
+  }, [mounted, authLoading, user, isAdmin, router])
 
   const fetchDashboardStats = async () => {
     try {
@@ -61,7 +67,7 @@ export default function AdminDashboard() {
     }
   }
 
-  if (authLoading || loading) {
+  if (!mounted || authLoading || loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -69,7 +75,7 @@ export default function AdminDashboard() {
     )
   }
 
-  if (!isAdmin) {
+  if (!isAdmin || !user) {
     return null
   }
 

@@ -48,11 +48,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(data.user)
         } else {
           Cookies.remove("auth_token")
+          setUser(null)
         }
       } catch (error) {
         console.error("Auth check failed:", error)
         Cookies.remove("auth_token")
+        setUser(null)
       }
+    } else {
+      setUser(null)
     }
     setLoading(false)
   }
@@ -75,15 +79,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(data.user)
       toast.success("Login successful!")
       
-      // Small delay to ensure cookie is set before redirect
+      // Redirect based on role with longer delay to ensure state is set
       setTimeout(() => {
-        // Redirect based on role
         if (data.user.role === "admin") {
           router.push("/admin")
         } else {
           router.push("/")
         }
-      }, 100)
+      }, 300)
     } catch (error: any) {
       toast.error(error.message || "Login failed")
       throw error
