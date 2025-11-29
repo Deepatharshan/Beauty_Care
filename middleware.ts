@@ -6,19 +6,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value
   const { pathname } = request.nextUrl
 
-  // Cart page - check authentication
-  if (pathname === "/cart") {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login?redirect=/cart", request.url))
-    }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-      return NextResponse.redirect(new URL("/login", request.url))
-    }
-  }
-
-  // Protected API routes
+  // Protected API routes for orders - only check token validity
   if (pathname.startsWith("/api/orders") && request.method === "POST") {
     if (!token) {
       return NextResponse.json({ error: "Authentication required" }, { status: 401 })
@@ -35,7 +23,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/cart",
     "/api/orders/:path*",
   ],
 }

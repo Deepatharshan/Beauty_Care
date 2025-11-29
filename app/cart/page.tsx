@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from "lucide-react"
@@ -8,6 +9,7 @@ import Navbar from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useCart } from "@/lib/cart-context"
+import { useAuth } from "@/lib/auth-context"
 import {
   Dialog,
   DialogContent,
@@ -20,11 +22,20 @@ import { toast } from "sonner"
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, getCartTotal, clearCart } = useCart()
+  const { user, loading: authLoading, isAuthenticated } = useAuth()
+  const router = useRouter()
   const [showOrderDialog, setShowOrderDialog] = useState(false)
   const [customerName, setCustomerName] = useState("")
   const [customerPhone, setCustomerPhone] = useState("")
   const [customerEmail, setCustomerEmail] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Check auth on mount
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push("/login?redirect=/cart")
+    }
+  }, [authLoading, isAuthenticated, router])
 
   const handleOrderViaWhatsApp = async () => {
     if (!customerName || !customerPhone) {
@@ -184,6 +195,21 @@ export default function CartPage() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (authLoading) {
+    return (
+      <main>
+        <Navbar />
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        </div>
+      </main>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return null
   }
 
   if (cart.length === 0) {
