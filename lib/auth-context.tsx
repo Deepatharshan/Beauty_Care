@@ -127,6 +127,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
     // Clear cart on logout
     localStorage.removeItem("cart")
+    // Dispatch logout event for cart context
+    window.dispatchEvent(new Event("logout"))
     toast.success("Logged out successfully")
     router.push("/login")
   }

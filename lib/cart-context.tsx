@@ -32,6 +32,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (savedCart) {
       setCart(JSON.parse(savedCart))
     }
+
+    // Listen for storage changes (logout from another tab or logout event)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "cart" && e.newValue === null) {
+        setCart([])
+      }
+    }
+
+    const handleLogout = () => {
+      setCart([])
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    window.addEventListener("logout", handleLogout)
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+      window.removeEventListener("logout", handleLogout)
+    }
   }, [])
 
   // Save cart to localStorage whenever it changes
