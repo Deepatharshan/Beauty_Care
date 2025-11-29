@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 import {
   BarChart,
   Bar,
@@ -32,23 +34,35 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
+  const { user, loading: authLoading, isAdmin } = useAuth()
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchDashboardStats()
-  }, [])
+    if (!authLoading && (!user || !isAdmin)) {
+      router.push("/login")
+      return
+    }
+    if (!authLoading && user && isAdmin) {
+      fetchDashboardStats()
+    }
+  }, [authLoading, user, isAdmin, router])
 
   const fetchDashboardStats = async () => {
     try {
       const response = await fetch("/api/admin/dashboard")
       const data = await response.json()
-      setStats(data)
-      setLoading(false)
-    } catch (error) {
-      console.error("Error fetching dashboard stats:", error)
-      setLoading(false)
-    }
+  if (authLoading || loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (!isAdmin) {
+    return null
   }
 
   if (loading) {

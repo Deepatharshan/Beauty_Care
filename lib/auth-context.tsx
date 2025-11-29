@@ -75,12 +75,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(data.user)
       toast.success("Login successful!")
       
-      // Redirect based on role
-      if (data.user.role === "admin") {
-        router.push("/admin")
-      } else {
-        router.push("/")
-      }
+      // Small delay to ensure cookie is set before redirect
+      setTimeout(() => {
+        // Redirect based on role
+        if (data.user.role === "admin") {
+          router.push("/admin")
+        } else {
+          router.push("/")
+        }
+      }, 100)
     } catch (error: any) {
       toast.error(error.message || "Login failed")
       throw error
