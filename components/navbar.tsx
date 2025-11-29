@@ -36,9 +36,6 @@ export default function Navbar() {
             <Link href="/track-orders" className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
               TRACK
             </Link>
-            <Link href="/admin" className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
-              ADMIN
-            </Link>
           </div>
 
           {/* Center: Logo */}

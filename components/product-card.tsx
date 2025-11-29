@@ -2,10 +2,12 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Star, ShoppingCart } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/lib/cart-context"
+import { useAuth } from "@/lib/auth-context"
 import { toast } from "sonner"
 
 interface Product {
@@ -19,6 +21,8 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart()
+  const { isAuthenticated } = useAuth()
+  const router = useRouter()
 
   // Calculate average rating
   const averageRating =
@@ -32,6 +36,13 @@ export default function ProductCard({ product }: { product: Product }) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart")
+      router.push("/login")
+      return
+    }
+    
     addToCart({
       id: product.id,
       name: product.name,
