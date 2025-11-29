@@ -125,6 +125,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     Cookies.remove("auth_token")
     setUser(null)
+    // Clear cart on logout
+    localStorage.removeItem("cart")
     toast.success("Logged out successfully")
     router.push("/login")
   }
