@@ -24,6 +24,7 @@ export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({})
 
   const heroSlides = [
     {
@@ -43,6 +44,29 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
     }, 5000)
     return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => ({
+              ...prev,
+              [entry.target.id]: true,
+            }))
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    const sections = document.querySelectorAll("[data-scroll-animate]")
+    sections.forEach((section) => observer.observe(section))
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section))
+    }
   }, [])
 
   const fetchProducts = async () => {
@@ -120,7 +144,15 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-white">
+      <section 
+        id="featured-section"
+        data-scroll-animate
+        className={`py-16 bg-white transition-all duration-1000 ${
+          visibleSections["featured-section"]
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3">
@@ -136,8 +168,20 @@ export default function Home() {
           ) : (
             <div className="relative">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {featuredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {featuredProducts.map((product, idx) => (
+                  <div
+                    key={product.id}
+                    className={`transition-all duration-700 delay-${idx * 100} ${
+                      visibleSections["featured-section"]
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-8"
+                    }`}
+                    style={{
+                      transitionDelay: visibleSections["featured-section"] ? `${idx * 100}ms` : "0ms",
+                    }}
+                  >
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
               
@@ -154,11 +198,25 @@ export default function Home() {
       </section>
 
       {/* Promotional Banners */}
-      <section className="py-12 bg-gray-50">
+      <section 
+        id="banners-section"
+        data-scroll-animate
+        className={`py-12 bg-gray-50 transition-all duration-1000 ${
+          visibleSections["banners-section"]
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Left Banner */}
-            <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-br from-gray-50 to-white">
+            <Card 
+              className={`overflow-hidden border-0 shadow-sm bg-gradient-to-br from-gray-50 to-white transition-all duration-1000 transform hover:shadow-lg ${
+                visibleSections["banners-section"]
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-10"
+              }`}
+            >
               <CardContent className="p-8 md:p-12">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1 space-y-4">
@@ -185,7 +243,13 @@ export default function Home() {
             </Card>
 
             {/* Right Banner */}
-            <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-br from-[#c8d5d0] to-[#e8f0ed]">
+            <Card 
+              className={`overflow-hidden border-0 shadow-sm bg-gradient-to-br from-[#c8d5d0] to-[#e8f0ed] transition-all duration-1000 transform hover:shadow-lg ${
+                visibleSections["banners-section"]
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 translate-x-10"
+              }`}
+            >
               <CardContent className="p-8 md:p-12 relative">
                 <div className="space-y-4 relative z-10">
                   <h3 className="text-3xl font-light text-gray-900">
@@ -213,7 +277,15 @@ export default function Home() {
       </section>
 
       {/* Trust Indicators */}
-      <section className="py-16 bg-white">
+      <section 
+        id="trust-section"
+        data-scroll-animate
+        className={`py-16 bg-white transition-all duration-1000 ${
+          visibleSections["trust-section"]
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
@@ -238,7 +310,17 @@ export default function Home() {
                 description: "Pay with Multiple Credit Cards",
               },
             ].map((item, index) => (
-              <div key={index} className="text-center space-y-3">
+              <div 
+                key={index} 
+                className={`text-center space-y-3 transition-all duration-700 transform hover:scale-105 hover:-translate-y-2 ${
+                  visibleSections["trust-section"]
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-8"
+                }`}
+                style={{
+                  transitionDelay: visibleSections["trust-section"] ? `${index * 100}ms` : "0ms",
+                }}
+              >
                 <div className="flex justify-center">
                   <div className="p-4 rounded-full bg-gray-50">
                     <item.icon className="w-8 h-8 text-gray-700" />
@@ -253,7 +335,15 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-gray-50">
+      <section 
+        id="testimonials-section"
+        data-scroll-animate
+        className={`py-16 bg-gray-50 transition-all duration-1000 ${
+          visibleSections["testimonials-section"]
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3">
@@ -276,7 +366,17 @@ export default function Home() {
                 quote: "Looking to affordably upgrade your everyday skincare? Look no further.",
               },
             ].map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-sm">
+              <Card 
+                key={index} 
+                className={`border-0 shadow-sm transition-all duration-700 transform hover:shadow-lg hover:-translate-y-2 ${
+                  visibleSections["testimonials-section"]
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-8"
+                }`}
+                style={{
+                  transitionDelay: visibleSections["testimonials-section"] ? `${index * 100}ms` : "0ms",
+                }}
+              >
                 <CardContent className="p-8 text-center space-y-4">
                   <div className="font-bold text-xl tracking-wider text-gray-900">
                     {testimonial.logo}
