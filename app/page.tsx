@@ -91,12 +91,13 @@ export default function Home() {
 
             {/* Right Image */}
             <div className="relative h-[500px] flex items-center justify-center">
-              <div className="relative w-full h-full max-w-md mx-auto">
+              <div className="relative w-full h-full">
                 <Image
-                  src="/placeholder.svg"
+                  src="/images/home-hero.jpg"
                   alt="Featured Product"
                   fill
-                  className="object-contain drop-shadow-2xl"
+                  className="object-cover rounded-lg"
+                  priority
                 />
                 <div className="absolute top-1/2 right-0 w-96 h-96 bg-gray-100 rounded-full -translate-y-1/2 translate-x-1/4 -z-10" />
               </div>
