@@ -22,6 +22,7 @@ interface User {
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchUsers()
@@ -30,17 +31,28 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       const response = await fetch("/api/admin/users")
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users: ${response.statusText}`)
+      }
+      
       const data = await response.json()
-      setUsers(data)
+      
+      // Ensure data is an array
+      const usersArray = Array.isArray(data) ? data : []
+      setUsers(usersArray)
+      setError(null)
       setLoading(false)
     } catch (error) {
       console.error("Error fetching users:", error)
+      setError(error instanceof Error ? error.message : "Failed to fetch users")
+      setUsers([])
       setLoading(false)
     }
   }
 
-  const customerCount = users.filter(u => u.role === "customer").length
-  const adminCount = users.filter(u => u.role === "admin").length
+  const customerCount = users.length > 0 ? users.filter(u => u.role === "customer").length : 0
+  const adminCount = users.length > 0 ? users.filter(u => u.role === "admin").length : 0
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -52,6 +64,13 @@ export default function AdminUsersPage() {
             <h1 className="text-3xl font-light text-gray-900 tracking-wide">Users</h1>
             <p className="text-gray-500 mt-2 text-sm">View registered users and their activity</p>
           </div>
+
+          {/* Error Display */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          )}
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

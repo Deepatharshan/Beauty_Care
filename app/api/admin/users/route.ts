@@ -8,13 +8,24 @@ export async function GET() {
     const cookieStore = await cookies()
     const token = cookieStore.get("auth_token")?.value
 
+    console.log("Admin users API - Token present:", !!token)
+
     if (!token) {
+      console.error("No auth token found")
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const payload = verifyToken(token)
-    if (!payload || payload.role !== "admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    console.log("Admin users API - Token payload:", payload)
+
+    if (!payload) {
+      console.error("Invalid token")
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    }
+
+    if (payload.role !== "admin") {
+      console.error("User is not admin, role:", payload.role)
+      return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 })
     }
 
     const users = await prisma.user.findMany({
@@ -36,6 +47,7 @@ export async function GET() {
       },
     })
 
+    console.log("Users fetched successfully:", users.length)
     return NextResponse.json(users)
   } catch (error) {
     console.error("Error fetching users:", error)
