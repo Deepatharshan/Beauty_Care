@@ -40,9 +40,9 @@ export default function ShopPage() {
   // Carousel state
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const carouselImages = [
-    "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1596462502278-af242a95b598?w=1200&h=400&fit=crop",
-    "https://images.unsplash.com/photo-1586701860601-881473e8e855?w=1200&h=400&fit=crop",
+    "/images/hero-1.jpg",
+    "/images/hero-2.jpg",
+    "/images/hero-3.jpg",
   ]
 
   // Fetch products
@@ -109,7 +109,6 @@ export default function ShopPage() {
       name: product.name,
       price: product.price,
       image: product.image,
-      quantity: 1,
     })
     toast.success(`${product.name} added to cart!`)
   }
@@ -143,17 +142,17 @@ export default function ShopPage() {
         {/* Carousel Content */}
         <div className="absolute inset-0 flex items-center justify-center text-center text-white z-10">
           <div className="max-w-2xl px-4">
-            <h1 className="text-4xl md:text-6xl font-light tracking-wide mb-4 animate-fade-in">
+            <h1 className="text-4xl md:text-6xl font-light tracking-wide mb-4 animate-fade-in drop-shadow-lg">
               DISCOVER BEAUTY
             </h1>
-            <p className="text-lg md:text-xl text-gray-200 font-light mb-8 animate-fade-in-delay">
+            <p className="text-lg md:text-xl text-gray-100 font-light mb-8 animate-fade-in-delay drop-shadow-md">
               Explore our premium collection of skincare and cosmetics
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button className="bg-white text-gray-900 hover:bg-gray-100">
+              <Button className="bg-white text-gray-900 hover:bg-gray-50 font-semibold px-8 py-3 text-base shadow-lg hover:shadow-xl transition-all">
                 Shop Now
               </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button className="bg-gray-900/80 text-white hover:bg-gray-900 border-2 border-white font-semibold px-8 py-3 text-base shadow-lg hover:shadow-xl transition-all backdrop-blur-sm">
                 Learn More
               </Button>
             </div>
