@@ -35,27 +35,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const checkAuth = async () => {
-    const token = Cookies.get("auth_token")
-    if (token) {
-      try {
-        const response = await fetch("/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        if (response.ok) {
-          const data = await response.json()
-          setUser(data.user)
-        } else {
-          Cookies.remove("auth_token")
-          setUser(null)
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error)
-        Cookies.remove("auth_token")
+    try {
+      // Include credentials to send HTTP-only cookies from server
+      const response = await fetch("/api/auth/me", {
+        credentials: "include",
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+      } else {
         setUser(null)
       }
-    } else {
+    } catch (error) {
+      console.error("Auth check failed:", error)
       setUser(null)
     }
     setLoading(false)

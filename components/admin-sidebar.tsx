@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, Package, MessageSquare, ShoppingCart, Users, LogOut } from "lucide-react"
+import { BarChart3, Package, MessageSquare, ShoppingCart, Users, LogOut, Settings } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
 export default function Sidebar() {
@@ -70,6 +70,16 @@ export default function Sidebar() {
         >
           <Users size={20} />
           Users
+        </Link>
+
+        <Link
+          href="/admin/settings"
+          className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+            isActive("/admin/settings") ? "bg-gray-800 text-white" : "text-gray-300 hover:bg-gray-800"
+          }`}
+        >
+          <Settings size={20} />
+          Settings
         </Link>
       </nav>
 

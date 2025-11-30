@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       role: user.role,
     })
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       token,
       user: {
         id: user.id,
@@ -74,6 +74,17 @@ export async function POST(request: Request) {
         role: user.role,
       },
     })
+
+    // Set auth_token cookie in the response header
+    response.cookies.set("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    })
+
+    return response
   } catch (error) {
     console.error("Registration error:", error)
     return NextResponse.json(

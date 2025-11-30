@@ -6,6 +6,8 @@ import Sidebar from "@/components/admin-sidebar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Users, ShoppingBag } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
+import { useRouter } from "next/navigation"
 
 interface User {
   id: string
@@ -23,17 +25,36 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { user, loading: authLoading, isAdmin } = useAuth()
+  const router = useRouter()
+
+  // Check authentication on mount
+  useEffect(() => {
+    if (!authLoading && (!user || !isAdmin)) {
+      router.push("/login")
+    }
+  }, [authLoading, user, isAdmin, router])
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    if (user && isAdmin) {
+      fetchUsers()
+    }
+  }, [user, isAdmin])
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("/api/admin/users")
+      const response = await fetch("/api/admin/users", {
+        method: "GET",
+        credentials: "include", // Include cookies in the request
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch users: ${response.statusText}`)
+        const errorData = await response.json().catch(() => ({}))
+        const errorMsg = errorData.error || `Failed to fetch users: ${response.statusText}`
+        throw new Error(errorMsg)
       }
       
       const data = await response.json()
@@ -45,7 +66,8 @@ export default function AdminUsersPage() {
       setLoading(false)
     } catch (error) {
       console.error("Error fetching users:", error)
-      setError(error instanceof Error ? error.message : "Failed to fetch users")
+      const errorMessage = error instanceof Error ? error.message : "Failed to fetch users"
+      setError(errorMessage)
       setUsers([])
       setLoading(false)
     }
