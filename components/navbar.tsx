@@ -30,7 +30,7 @@ export default function Navbar() {
             <Link href="/" className="text-sm font-medium text-gray-900 hover:text-gray-600 transition">
               HOME
             </Link>
-            <Link href="/admin/products" className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
+            <Link href="/shop" className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
               SHOP
             </Link>
             <Link href="/track-orders" className="text-sm font-medium text-gray-700 hover:text-gray-900 transition">
@@ -116,7 +116,7 @@ export default function Navbar() {
             <Link href="/" className="block px-4 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg">
               HOME
             </Link>
-            <Link href="/admin/products" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
+            <Link href="/shop" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
               SHOP
             </Link>
             <Link href="/track-orders" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
