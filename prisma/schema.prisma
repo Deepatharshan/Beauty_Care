@@ -79,3 +79,11 @@ model Order {
   @@index([userId])
   @@index([orderStatus])
 }
+
+// Global settings for the store (e.g., WhatsApp contact)
+model Settings {
+  id              String   @id @default(cuid())
+  whatsappNumber  String?
+  whatsappTemplate String?
+  updatedAt       DateTime @updatedAt
+}

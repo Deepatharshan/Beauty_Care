@@ -33,7 +33,21 @@ export async function GET() {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    return NextResponse.json(user)
+    // Fetch global settings (create default if missing)
+    let settings = await prisma.settings.findFirst()
+    if (!settings) {
+      settings = await prisma.settings.create({
+        data: {},
+      })
+    }
+
+    return NextResponse.json({
+      user,
+      settings: {
+        whatsappNumber: settings.whatsappNumber || null,
+        whatsappTemplate: settings.whatsappTemplate || null,
+      },
+    })
   } catch (error) {
     console.error("Error fetching settings:", error)
     return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 })
@@ -55,7 +69,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 })
     }
 
-    const { email, currentPassword, newPassword } = await request.json()
+    const { email, currentPassword, newPassword, whatsappNumber, whatsappTemplate } = await request.json()
 
     // Validate input
     if (!currentPassword) {
@@ -77,7 +91,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Current password is incorrect" }, { status: 400 })
     }
 
-    // Prepare update data
+    // Prepare update data for user
     const updateData: any = {}
 
     // Update email if provided and different
@@ -103,25 +117,57 @@ export async function PUT(request: Request) {
       updateData.password = await hashPassword(newPassword)
     }
 
-    // If nothing to update
-    if (Object.keys(updateData).length === 0) {
-      return NextResponse.json({ error: "No changes provided" }, { status: 400 })
+    // Update user if there are changes
+    let updatedUser = null
+    if (Object.keys(updateData).length > 0) {
+      updatedUser = await prisma.user.update({
+        where: { id: payload.userId },
+        data: updateData,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          role: true,
+        },
+      })
+    } else {
+      // Fetch current user minimal if no change
+      updatedUser = await prisma.user.findUnique({
+        where: { id: payload.userId },
+        select: { id: true, name: true, email: true, phone: true, role: true },
+      })
     }
 
-    // Update user
-    const updatedUser = await prisma.user.update({
-      where: { id: payload.userId },
-      data: updateData,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        role: true,
+    // Update Settings (create if missing)
+    let settings = await prisma.settings.findFirst()
+    if (!settings) {
+      settings = await prisma.settings.create({ data: {} })
+    }
+
+    // Only update provided fields
+    const settingsUpdate: any = {}
+    if (typeof whatsappNumber !== "undefined") {
+      settingsUpdate.whatsappNumber = whatsappNumber || null
+    }
+    if (typeof whatsappTemplate !== "undefined") {
+      settingsUpdate.whatsappTemplate = whatsappTemplate || null
+    }
+
+    if (Object.keys(settingsUpdate).length > 0) {
+      settings = await prisma.settings.update({
+        where: { id: settings.id },
+        data: settingsUpdate,
+      })
+    }
+
+    return NextResponse.json({
+      user: updatedUser,
+      settings: {
+        whatsappNumber: settings.whatsappNumber || null,
+        whatsappTemplate: settings.whatsappTemplate || null,
       },
     })
-
-    return NextResponse.json(updatedUser)
   } catch (error) {
     console.error("Error updating settings:", error)
     return NextResponse.json({ error: "Failed to update settings" }, { status: 500 })

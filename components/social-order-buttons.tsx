@@ -30,10 +30,38 @@ export default function SocialOrderButtons({ product }: SocialOrderButtonsProps)
   const [customerName, setCustomerName] = useState("")
   const [customerPhone, setCustomerPhone] = useState("")
   const [customerEmail, setCustomerEmail] = useState("")
+  const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null)
+  const [whatsappTemplate, setWhatsappTemplate] = useState<string | null>(null)
+
+  // Fetch public settings (WhatsApp number/template)
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const res = await fetch("/api/settings")
+        if (res.ok) {
+          const data = await res.json()
+          setWhatsappNumber(data.whatsappNumber || null)
+          setWhatsappTemplate(data.whatsappTemplate || null)
+        }
+      } catch (e) {
+        // silently ignore
+      }
+    }
+    loadSettings()
+  }, [])
 
   const totalPrice = product.price * quantity
 
   const generateOrderMessage = () => {
+    if (whatsappTemplate) {
+      return whatsappTemplate
+        .replace("{product}", product.name)
+        .replace("{qty}", String(quantity))
+        .replace("{total}", String(totalPrice))
+        .replace("{name}", customerName)
+        .replace("{phone}", customerPhone)
+        .replace("{email}", customerEmail || "")
+    }
     return `Hello! I'm interested in ordering: ${product.name} (Qty: ${quantity}) - Total: Rs. ${totalPrice}. Customer Name: ${customerName}, Phone: ${customerPhone}, Email: ${customerEmail}`
   }
 
@@ -43,6 +71,12 @@ export default function SocialOrderButtons({ product }: SocialOrderButtonsProps)
       return
     }
     
+    // Ensure WhatsApp number is configured
+    if (!whatsappNumber) {
+      toast.error("WhatsApp ordering is not configured. Please contact support.")
+      return
+    }
+
     // Save order to database first
     try {
       await recordOrder("whatsapp")
@@ -50,7 +84,6 @@ export default function SocialOrderButtons({ product }: SocialOrderButtonsProps)
       
       // Then open WhatsApp with the specific number and pre-filled message
       const message = encodeURIComponent(generateOrderMessage())
-      const whatsappNumber = "94767388576" // Your WhatsApp number
       const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`
       window.open(whatsappLink, "_blank")
     } catch (error) {

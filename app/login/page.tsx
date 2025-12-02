@@ -106,12 +106,6 @@ export default function LoginPage() {
               Continue as guest
             </Link>
           </div>
-
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-xs font-medium text-gray-700 mb-2">Admin Login:</p>
-            <p className="text-xs text-gray-600">Email: admin@glowing.com</p>
-            <p className="text-xs text-gray-600">Password: admin123</p>
-          </div>
         </CardContent>
       </Card>
     </div>

@@ -88,7 +88,7 @@ export default function Home() {
 
       {/* Top Banner */}
       <div className="bg-[#5a7c6f] text-white text-center py-2 text-sm">
-        Free shipping on all U.S orders $50+
+        Free Delivery on Orders Over Rs.7500
       </div>
 
       {/* Hero Carousel */}

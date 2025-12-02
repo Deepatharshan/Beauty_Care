@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import Sidebar from "@/components/admin-sidebar"
 import { useAuth } from "@/lib/auth-context"
 import { toast } from "sonner"
-import { Lock, Mail } from "lucide-react"
+import { Lock, Mail, MessageCircle } from "lucide-react"
 
 interface AdminSettings {
   id: string
@@ -16,6 +16,11 @@ interface AdminSettings {
   email: string
   phone: string
   role: string
+}
+
+interface StoreSettings {
+  whatsappNumber: string | null
+  whatsappTemplate: string | null
 }
 
 export default function AdminSettingsPage() {
@@ -27,6 +32,7 @@ export default function AdminSettingsPage() {
 
   // Form state
   const [email, setEmail] = useState("")
+  const [storeSettings, setStoreSettings] = useState<StoreSettings>({ whatsappNumber: null, whatsappTemplate: null })
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -52,8 +58,11 @@ export default function AdminSettingsPage() {
       }
 
       const data = await response.json()
-      setSettings(data)
-      setEmail(data.email)
+      setSettings(data.user)
+      setEmail(data.user.email)
+      setStoreSettings(data.settings)
+      setWhatsappNumber(data.settings.whatsappNumber || "")
+      setWhatsappTemplate(data.settings.whatsappTemplate || "")
       setLoading(false)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to fetch settings"
@@ -101,6 +110,8 @@ export default function AdminSettingsPage() {
           email: email !== settings?.email ? email : undefined,
           currentPassword,
           newPassword: newPassword || undefined,
+          whatsappNumber,
+          whatsappTemplate,
         }),
       })
 
@@ -110,7 +121,8 @@ export default function AdminSettingsPage() {
         throw new Error(data.error || "Failed to update settings")
       }
 
-      setSettings(data)
+      setSettings(data.user)
+      setStoreSettings(data.settings)
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
@@ -252,6 +264,65 @@ export default function AdminSettingsPage() {
                   <strong>Security Note:</strong> You must enter your current password to make any changes to your account.
                 </p>
               </div>
+            </Card>
+
+            {/* WhatsApp Settings */}
+            <Card className="bg-white p-6 mt-8">
+              <div className="flex items-center gap-3 mb-4">
+                <MessageCircle size={24} className="text-green-600" />
+                <h2 className="text-xl font-light text-gray-900">WhatsApp Ordering Settings</h2>
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  handleSubmit(e)
+                }}
+                className="space-y-6"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">WhatsApp Number</label>
+                  <Input
+                    type="tel"
+                    value={whatsappNumber}
+                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    placeholder="e.g., 94767388576"
+                    className="w-full"
+                  />
+                  <p className="text-gray-500 text-xs mt-1">Enter your WhatsApp number in international format without + or spaces.</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Message Template (Optional)</label>
+                  <Input
+                    value={whatsappTemplate}
+                    onChange={(e) => setWhatsappTemplate(e.target.value)}
+                    placeholder="Use placeholders: {product}, {qty}, {total}, {name}, {phone}, {email}"
+                    className="w-full"
+                  />
+                  <p className="text-gray-500 text-xs mt-1">Example: "Order: {product} x{qty} - Rs. {total}. Name: {name}, Phone: {phone}, Email: {email}"</p>
+                </div>
+
+                <div className="flex gap-4 pt-2">
+                  <Button
+                    type="submit"
+                    disabled={saving}
+                    className="px-8 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
+                  >
+                    {saving ? "Saving..." : "Save WhatsApp Settings"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setWhatsappNumber(storeSettings.whatsappNumber || "")
+                      setWhatsappTemplate(storeSettings.whatsappTemplate || "")
+                    }}
+                    className="px-8 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition"
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </form>
             </Card>
           </div>
         </div>
