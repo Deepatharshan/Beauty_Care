@@ -19,8 +19,7 @@ interface AdminSettings {
 }
 
 interface StoreSettings {
-  whatsappNumber: string | null
-  whatsappTemplate: string | null
+  whatsappLink: string | null
 }
 
 export default function AdminSettingsPage() {
@@ -32,10 +31,11 @@ export default function AdminSettingsPage() {
 
   // Form state
   const [email, setEmail] = useState("")
-  const [storeSettings, setStoreSettings] = useState<StoreSettings>({ whatsappNumber: null, whatsappTemplate: null })
+  const [storeSettings, setStoreSettings] = useState<StoreSettings>({ whatsappLink: null })
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [whatsappLink, setWhatsappLink] = useState("")
 
   useEffect(() => {
     if (!user || !isAdmin) {
@@ -61,8 +61,7 @@ export default function AdminSettingsPage() {
       setSettings(data.user)
       setEmail(data.user.email)
       setStoreSettings(data.settings)
-      setWhatsappNumber(data.settings.whatsappNumber || "")
-      setWhatsappTemplate(data.settings.whatsappTemplate || "")
+      setWhatsappLink(data.settings.whatsappLink || "")
       setLoading(false)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to fetch settings"
@@ -75,8 +74,8 @@ export default function AdminSettingsPage() {
     e.preventDefault()
 
     // Validate inputs
-    if (!currentPassword) {
-      toast.error("Current password is required")
+    if ((email !== settings?.email || newPassword) && !currentPassword) {
+      toast.error("Current password is required to change email or password")
       return
     }
 
@@ -92,7 +91,7 @@ export default function AdminSettingsPage() {
       }
     }
 
-    if (email === settings?.email && !newPassword) {
+    if (email === settings?.email && !newPassword && whatsappLink === storeSettings.whatsappLink) {
       toast.error("No changes to save")
       return
     }
@@ -110,8 +109,7 @@ export default function AdminSettingsPage() {
           email: email !== settings?.email ? email : undefined,
           currentPassword,
           newPassword: newPassword || undefined,
-          whatsappNumber,
-          whatsappTemplate,
+          whatsappLink,
         }),
       })
 
@@ -270,7 +268,7 @@ export default function AdminSettingsPage() {
             <Card className="bg-white p-6 mt-8">
               <div className="flex items-center gap-3 mb-4">
                 <MessageCircle size={24} className="text-green-600" />
-                <h2 className="text-xl font-light text-gray-900">WhatsApp Ordering Settings</h2>
+                <h2 className="text-xl font-light text-gray-900">WhatsApp Ordering Link</h2>
               </div>
 
               <form
@@ -281,26 +279,20 @@ export default function AdminSettingsPage() {
                 className="space-y-6"
               >
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">WhatsApp Number</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">WhatsApp Link</label>
                   <Input
-                    type="tel"
-                    value={whatsappNumber}
-                    onChange={(e) => setWhatsappNumber(e.target.value)}
-                    placeholder="e.g., 94767388576"
+                    type="url"
+                    value={whatsappLink}
+                    onChange={(e) => setWhatsappLink(e.target.value)}
+                    placeholder="e.g., https://wa.me/94767388576"
                     className="w-full"
                   />
-                  <p className="text-gray-500 text-xs mt-1">Enter your WhatsApp number in international format without + or spaces.</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message Template (Optional)</label>
-                  <Input
-                    value={whatsappTemplate}
-                    onChange={(e) => setWhatsappTemplate(e.target.value)}
-                    placeholder="Use placeholders: {product}, {qty}, {total}, {name}, {phone}, {email}"
-                    className="w-full"
-                  />
-                  <p className="text-gray-500 text-xs mt-1">Example: "Order: {product} x{qty} - Rs. {total}. Name: {name}, Phone: {phone}, Email: {email}"</p>
+                  <p className="text-gray-500 text-xs mt-1">
+                    Enter your WhatsApp link. Customers will be directed here when they order via WhatsApp. You can get it from{" "}
+                    <a href="https://wa.me" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      wa.me
+                    </a>
+                  </p>
                 </div>
 
                 <div className="flex gap-4 pt-2">
@@ -309,13 +301,12 @@ export default function AdminSettingsPage() {
                     disabled={saving}
                     className="px-8 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
                   >
-                    {saving ? "Saving..." : "Save WhatsApp Settings"}
+                    {saving ? "Saving..." : "Save WhatsApp Link"}
                   </Button>
                   <Button
                     type="button"
                     onClick={() => {
-                      setWhatsappNumber(storeSettings.whatsappNumber || "")
-                      setWhatsappTemplate(storeSettings.whatsappTemplate || "")
+                      setWhatsappLink(storeSettings.whatsappLink || "")
                     }}
                     className="px-8 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition"
                   >

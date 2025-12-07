@@ -83,7 +83,6 @@ model Order {
 // Global settings for the store (e.g., WhatsApp contact)
 model Settings {
   id              String   @id @default(cuid())
-  whatsappNumber  String?
-  whatsappTemplate String?
+  whatsappLink    String?  // e.g., https://wa.me/94767388576
   updatedAt       DateTime @updatedAt
 }

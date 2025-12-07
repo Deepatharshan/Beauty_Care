@@ -45,7 +45,6 @@ export async function GET() {
       user,
       settings: {
         whatsappNumber: settings.whatsappNumber || null,
-        whatsappTemplate: settings.whatsappTemplate || null,
       },
     })
   } catch (error) {
@@ -68,12 +67,13 @@ export async function PUT(request: Request) {
     if (!payload || payload.role !== "admin") {
       return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 })
     }
+    const { email, currentPassword, newPassword, whatsappNumber } = await request.json()
 
-    const { email, currentPassword, newPassword, whatsappNumber, whatsappTemplate } = await request.json()
+    console.log("PUT /api/admin/settings - Received payload:", { email, whatsappNumber, hasPassword: !!currentPassword })
 
-    // Validate input
-    if (!currentPassword) {
-      return NextResponse.json({ error: "Current password is required" }, { status: 400 })
+    // Validate input - only require password if changing email or password
+    if ((email || newPassword) && !currentPassword) {
+      return NextResponse.json({ error: "Current password is required to change email or password" }, { status: 400 })
     }
 
     // Get the user
@@ -85,10 +85,12 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    // Verify current password
-    const isValidPassword = await verifyPassword(currentPassword, user.password)
-    if (!isValidPassword) {
-      return NextResponse.json({ error: "Current password is incorrect" }, { status: 400 })
+    // Verify current password only if changing email or password
+    if ((email || newPassword) && currentPassword) {
+      const isValidPassword = await verifyPassword(currentPassword, user.password)
+      if (!isValidPassword) {
+        return NextResponse.json({ error: "Current password is incorrect" }, { status: 400 })
+      }
     }
 
     // Prepare update data for user
@@ -144,28 +146,28 @@ export async function PUT(request: Request) {
     if (!settings) {
       settings = await prisma.settings.create({ data: {} })
     }
-
     // Only update provided fields
     const settingsUpdate: any = {}
     if (typeof whatsappNumber !== "undefined") {
       settingsUpdate.whatsappNumber = whatsappNumber || null
     }
-    if (typeof whatsappTemplate !== "undefined") {
-      settingsUpdate.whatsappTemplate = whatsappTemplate || null
-    }
+
+    console.log("Settings update object:", settingsUpdate)
 
     if (Object.keys(settingsUpdate).length > 0) {
       settings = await prisma.settings.update({
         where: { id: settings.id },
         data: settingsUpdate,
       })
+      console.log("Settings updated:", settings)
+    } else {
+      console.log("No settings to update")
     }
 
     return NextResponse.json({
       user: updatedUser,
       settings: {
         whatsappNumber: settings.whatsappNumber || null,
-        whatsappTemplate: settings.whatsappTemplate || null,
       },
     })
   } catch (error) {

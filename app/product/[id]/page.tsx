@@ -10,7 +10,6 @@ import Navbar from "@/components/navbar"
 import ReviewForm from "@/components/review-form"
 import ReviewList from "@/components/review-list"
 import RatingBadge from "@/components/rating-badge"
-import SocialOrderButtons from "@/components/social-order-buttons"
 import { useCart } from "@/lib/cart-context"
 
 interface Review {
@@ -187,9 +186,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 Add to Cart
               </Button>
             </div>
-
-            {/* Social Order Buttons */}
-            <SocialOrderButtons product={product} />
           </div>
         </div>
 

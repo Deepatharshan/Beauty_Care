@@ -9,8 +9,7 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      whatsappNumber: settings.whatsappNumber || null,
-      whatsappTemplate: settings.whatsappTemplate || null,
+      whatsappLink: settings.whatsappLink || null,
     })
   } catch (error) {
     console.error("Error fetching public settings:", error)
