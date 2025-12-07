@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db"
 import { NextResponse } from "next/server"
 
+// Prevent static generation for this API route
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     // Fetch all data
