@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import Navbar from "@/components/navbar"
 import ProductCard from "@/components/product-card"
 import Image from "next/image"
+import Hero3D from "@/components/hero-3d"
 
 interface Product {
   id: string
@@ -91,57 +92,8 @@ export default function Home() {
         Free Delivery on Orders Over Rs.7500
       </div>
 
-      {/* Hero Carousel */}
-      <section className="relative bg-gradient-to-r from-gray-50 to-white">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="grid md:grid-cols-2 gap-8 items-center min-h-[500px] py-12">
-            {/* Left Content */}
-            <div className="space-y-6 z-10">
-              <div className="inline-block">
-                <span className="text-xs font-semibold tracking-wider text-gray-600">
-                  {heroSlides[currentSlide].badge}
-                </span>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-light leading-tight text-gray-900">
-                Beauty Inspired<br />by Real Life
-              </h1>
-              <p className="text-gray-600 max-w-md">
-                {heroSlides[currentSlide].description}
-              </p>
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-6 text-base">
-                {heroSlides[currentSlide].buttonText}
-              </Button>
-            </div>
-
-            {/* Right Image */}
-            <div className="relative h-[500px] flex items-center justify-center">
-              <div className="relative w-full h-full">
-                <Image
-                  src="/images/home-hero.jpg"
-                  alt="Featured Product"
-                  fill
-                  className="object-cover rounded-lg"
-                  priority
-                />
-                <div className="absolute top-1/2 right-0 w-96 h-96 bg-gray-100 rounded-full -translate-y-1/2 translate-x-1/4 -z-10" />
-              </div>
-            </div>
-          </div>
-
-          {/* Carousel Indicators */}
-          <div className="flex justify-center gap-2 pb-8">
-            {heroSlides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`h-2 rounded-full transition-all ${
-                  index === currentSlide ? "w-8 bg-gray-800" : "w-2 bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 3D Animated Hero Section */}
+      <Hero3D />
 
       {/* Featured Products */}
       <section 
